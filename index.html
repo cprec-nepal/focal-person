@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPREC Nepal - Focal Person Registration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { --bg: #fafbfc; --fg: #1a2332; --accent: #0d9488; --accent-light: #14b8a6; --card: #ffffff; --border: #e2e8f0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--fg); }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    
+    .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; transition: all 0.2s; background: white; }
+    .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
+    
+    .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); color: white; padding: 14px 28px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s; width: 100%; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -4px rgba(13, 148, 136, 0.4); }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+    
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .section-title { font-size: 1.25rem; font-weight: 700; color: var(--fg); margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; display: inline-block; }
+    
+    .alert-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 16px; border-radius: 10px; margin-top: 16px; display: none; }
+    .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 16px; border-radius: 10px; margin-top: 16px; display: none; }
+    
+    .header-sticky { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.95); border-bottom: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header-sticky">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center text-white shadow">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-gray-900">CPREC Nepal</h1>
+        </div>
+      </div>
+      <a href="https://cprec-nepal.github.io/register-school/" class="text-sm text-teal-600 hover:underline font-medium">School Registration</a>
+    </div>
+  </header>
+
+  <main class="py-10 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="font-display text-3xl lg:text-4xl text-gray-900 mb-2">Focal Person Registration</h2>
+        <p class="text-gray-500">District-wise focal person database for School Health Program</p>
+      </div>
+      
+      <form id="focalPersonForm" class="space-y-8">
+        
+        <!-- Personal Details -->
+        <div class="card p-6">
+          <h3 class="section-title">Personal Details</h3>
+          <div class="grid md:grid-cols-2 gap-6 mt-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+              <input type="text" name="fullName" required class="form-input" placeholder="Full legal name">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label>
+              <select name="gender" required class="form-input">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth <span class="text-red-500">*</span></label>
+              <input type="date" name="dob" required class="form-input">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Citizenship No.</label>
+              <input type="text" name="citizenship" class="form-input" placeholder="Citizenship Number">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number <span class="text-red-500">*</span></label>
+              <input type="tel" name="contact" required class="form-input" placeholder="+977-XXXXXXXXXX">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+              <input type="email" name="email" class="form-input" placeholder="email@example.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- Permanent Address -->
+        <div class="card p-6">
+          <h3 class="section-title">Permanent Address</h3>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Province <span class="text-red-500">*</span></label>
+              <select name="permProvince" id="permProvince" required class="form-input">
+                <option value="">Loading...</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">District <span class="text-red-500">*</span></label>
+              <select name="permDistrict" id="permDistrict" required class="form-input" disabled>
+                <option value="">Select Province first</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Municipality <span class="text-red-500">*</span></label>
+              <select name="permMunicipality" id="permMunicipality" required class="form-input" disabled>
+                <option value="">Select District first</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Ward No. <span class="text-red-500">*</span></label>
+              <input type="number" name="permWard" required class="form-input" placeholder="e.g., 5">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Tole / Street Address</label>
+              <input type="text" name="permTole" class="form-input" placeholder="Street name or Tole">
+            </div>
+          </div>
+        </div>
+
+        <!-- Temporary Address -->
+        <div class="card p-6">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="section-title" style="margin-bottom: 0; border-bottom: none;">Temporary Address</h3>
+            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+              <input type="checkbox" id="sameAsPerm" class="rounded text-teal-600 focus:ring-teal-500">
+              Same as Permanent
+            </label>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+              <select name="tempProvince" id="tempProvince" class="form-input">
+                <option value="">Select Province</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
+              <select name="tempDistrict" id="tempDistrict" class="form-input" disabled>
+                <option value="">Select Province first</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Municipality</label>
+              <select name="tempMunicipality" id="tempMunicipality" class="form-input" disabled>
+                <option value="">Select District first</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Ward No.</label>
+              <input type="number" name="tempWard" class="form-input" placeholder="e.g., 5">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Tole / Street Address</label>
+              <input type="text" name="tempTole" class="form-input" placeholder="Street name or Tole">
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Details -->
+        <div class="card p-6">
+          <h3 class="section-title">Professional & Education Details</h3>
+          <div class="grid md:grid-cols-2 gap-6 mt-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Education Level <span class="text-red-500">*</span></label>
+              <select name="educationLevel" id="educationLevel" required class="form-input">
+                <option value="" disabled selected>Select Level</option>
+                <option value="SLC/SEE">SLC / SEE</option>
+                <option value="Intermediate/+2">Intermediate / +2</option>
+                <option value="Bachelor">Bachelor</option>
+                <option value="Master">Master</option>
+                <option value="PhD">PhD</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div id="educationOtherBox" style="display: none;">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Specify Education</label>
+              <input type="text" name="educationDetailOther" class="form-input" placeholder="e.g., CTEVT Certificate">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Education Details (Faculty)</label>
+              <input type="text" name="educationDetail" class="form-input" placeholder="e.g., Bachelor in Public Health">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Current Profession <span class="text-red-500">*</span></label>
+              <select name="profession" id="profession" required class="form-input">
+                <option value="" disabled selected>Select Profession</option>
+                <option value="Health Worker">Health Worker</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Government Staff">Government Staff</option>
+                <option value="Social Worker">Social Worker</option>
+                <option value="Student">Student</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div id="professionOtherBox" style="display: none;">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Specify Profession</label>
+              <input type="text" name="professionOther" class="form-input" placeholder="Enter your profession">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Organization / Institution</label>
+              <input type="text" name="organization" class="form-input" placeholder="Current workplace">
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden Form Type -->
+        <input type="hidden" name="formType" value="focalPerson">
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button type="submit" id="submitBtn" class="btn-primary">Submit Registration</button>
+        </div>
+
+        <div id="successMessage" class="alert-success">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Registration successful! Data saved successfully.</span>
+          </div>
+        </div>
+        <div id="errorMessage" class="alert-error">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Error submitting form. Please try again.</span>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNNOC7VavC-N5GAuYpZ12BP2laFCpIIQoOa9Z2idM6LEXG7waFzB8JbX1zJnAyMZn7/exec';
+    
+    let locationData = {};
+    const form = document.getElementById('focalPersonForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMessage');
+    const errorMsg = document.getElementById('errorMessage');
+
+    // --- 1. LOAD LOCATIONS ON PAGE LOAD ---
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=getLocations');
+        const result = await response.json();
+        
+        if (result.result === 'success') {
+          locationData = result.data;
+          populateProvinces();
+        } else {
+          console.error('Failed to load locations:', result.message);
+          // Fallback if API fails
+          document.getElementById('permProvince').innerHTML = '<option value="">Error loading</option>';
+        }
+      } catch (error) {
+        console.error('Network error:', error);
+      }
+    });
+
+    // --- 2. POPULATE DROPDOWNS LOGIC ---
+    function populateProvinces() {
+      const permProv = document.getElementById('permProvince');
+      const tempProv = document.getElementById('tempProvince');
+      
+      const options = '<option value="">Select Province</option>' + 
+        Object.keys(locationData).map(p => `<option value="${p}">${p}</option>`).join('');
+      
+      permProv.innerHTML = options;
+      tempProv.innerHTML = options;
+    }
+
+    function populateDistricts(provinceId, districtId, munId) {
+      const province = document.getElementById(provinceId).value;
+      const districtSelect = document.getElementById(districtId);
+      const munSelect = document.getElementById(munId);
+      
+      // Reset dependents
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+      munSelect.innerHTML = '<option value="">Select Municipality</option>';
+      districtSelect.disabled = true;
+      munSelect.disabled = true;
+
+      if (province && locationData[province]) {
+        const districts = Object.keys(locationData[province]);
+        districtSelect.innerHTML = '<option value="">Select District</option>' + 
+          districts.map(d => `<option value="${d}">${d}</option>`).join('');
+        districtSelect.disabled = false;
+      }
+    }
+
+    function populateMunicipalities(provinceId, districtId, munId) {
+      const province = document.getElementById(provinceId).value;
+      const district = document.getElementById(districtId).value;
+      const munSelect = document.getElementById(munId);
+      
+      munSelect.innerHTML = '<option value="">Select Municipality</option>';
+      munSelect.disabled = true;
+
+      if (province && district && locationData[province][district]) {
+        const municipalities = locationData[province][district];
+        munSelect.innerHTML = '<option value="">Select Municipality</option>' + 
+          municipalities.map(m => `<option value="${m}">${m}</option>`).join('');
+        munSelect.disabled = false;
+      }
+    }
+
+    // Event Listeners for Cascading Dropdowns
+    document.getElementById('permProvince').addEventListener('change', () => populateDistricts('permProvince', 'permDistrict', 'permMunicipality'));
+    document.getElementById('permDistrict').addEventListener('change', () => populateMunicipalities('permProvince', 'permDistrict', 'permMunicipality'));
+    
+    document.getElementById('tempProvince').addEventListener('change', () => populateDistricts('tempProvince', 'tempDistrict', 'tempMunicipality'));
+    document.getElementById('tempDistrict').addEventListener('change', () => populateMunicipalities('tempProvince', 'tempDistrict', 'tempMunicipality'));
+
+    // --- 3. SAME AS PERMANENT CHECKBOX ---
+    document.getElementById('sameAsPerm').addEventListener('change', function() {
+      if (this.checked) {
+        // Copy values
+        const pProv = document.getElementById('permProvince').value;
+        document.getElementById('tempProvince').value = pProv;
+        populateDistricts('tempProvince', 'tempDistrict', 'tempMunicipality');
+        
+        // Timeout needed to wait for districts to populate
+        setTimeout(() => {
+          document.getElementById('tempDistrict').value = document.getElementById('permDistrict').value;
+          populateMunicipalities('tempProvince', 'tempDistrict', 'tempMunicipality');
+          
+          setTimeout(() => {
+            document.getElementById('tempMunicipality').value = document.getElementById('permMunicipality').value;
+          }, 100);
+        }, 100);
+
+        document.querySelector('[name="tempWard"]').value = document.querySelector('[name="permWard"]').value;
+        document.querySelector('[name="tempTole"]').value = document.querySelector('[name="permTole"]').value;
+        
+        // Disable
+        document.getElementById('tempProvince').disabled = true;
+        document.getElementById('tempDistrict').disabled = true;
+        document.getElementById('tempMunicipality').disabled = true;
+        document.querySelector('[name="tempWard"]').disabled = true;
+        document.querySelector('[name="tempTole"]').disabled = true;
+
+      } else {
+        // Enable
+        document.getElementById('tempProvince').disabled = false;
+        document.getElementById('tempDistrict').disabled = false;
+        document.getElementById('tempMunicipality').disabled = false;
+        document.querySelector('[name="tempWard"]').disabled = false;
+        document.querySelector('[name="tempTole"]').disabled = false;
+      }
+    });
+
+    // --- 4. SHOW/HIDE "OTHER" INPUTS ---
+    document.getElementById('educationLevel').addEventListener('change', function() {
+      document.getElementById('educationOtherBox').style.display = this.value === 'Other' ? 'block' : 'none';
+    });
+    document.getElementById('profession').addEventListener('change', function() {
+      document.getElementById('professionOtherBox').style.display = this.value === 'Other' ? 'block' : 'none';
+    });
+
+    // --- 5. FORM SUBMISSION ---
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Submitting...</span>';
+
+      try {
+        const formData = new FormData(form);
+        
+        // Handle "Other" logic for Education
+        if (formData.get('educationLevel') === 'Other') {
+            formData.set('educationLevel', formData.get('educationDetailOther'));
+        }
+        // Handle "Other" logic for Profession
+        if (formData.get('profession') === 'Other') {
+            formData.set('profession', formData.get('professionOther'));
+        }
+
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        });
+
+        successMsg.style.display = 'block';
+        form.reset();
+        // Reset dropdowns state
+        document.getElementById('permDistrict').disabled = true;
+        document.getElementById('permMunicipality').disabled = true;
+        document.getElementById('tempDistrict').disabled = true;
+        document.getElementById('tempMunicipality').disabled = true;
+
+      } catch (error) {
+        console.error('Error:', error);
+        errorMsg.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Registration';
+      }
+    });
+  </script>
+</body>
+</html>
