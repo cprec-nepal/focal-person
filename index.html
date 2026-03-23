@@ -1,411 +1,620 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CPREC Nepal - Focal Person Registration</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>MCQ Master | CPREC Nepal</title>
+  
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
   
   <style>
-    :root { --bg: #fafbfc; --fg: #1a2332; --accent: #0d9488; --accent-light: #14b8a6; --card: #ffffff; --border: #e2e8f0; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--fg); }
-    .font-display { font-family: 'DM Serif Display', serif; }
+    :root {
+      --bg: #0a0f1a;
+      --bg-elevated: #111827;
+      --fg: #f8fafc;
+      --fg-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --card: rgba(17, 24, 39, 0.85);
+      --card-border: rgba(148, 163, 184, 0.1);
+      --success: #22c55e;
+      --error: #ef4444;
+    }
+
+    .light-mode {
+      --bg: #f1f5f9;
+      --bg-elevated: #ffffff;
+      --fg: #0f172a;
+      --fg-muted: #64748b;
+      --accent: #059669;
+      --accent-glow: rgba(5, 150, 105, 0.15);
+      --card: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; outline: none; }
+    body {
+      margin: 0; font-family: 'Inter', sans-serif;
+      background: var(--bg); color: var(--fg);
+      min-height: 100vh; overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* Ambient Background */
+    .mesh-gradient {
+      position: fixed; inset: 0; z-index: -1; background: var(--bg); overflow: hidden;
+    }
+    .mesh-gradient::before {
+      content: ''; position: absolute; width: 150%; height: 150%; top: -25%; left: -25%;
+      background: radial-gradient(ellipse at 20% 30%, var(--accent-glow) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 70%, rgba(99, 102, 241, 0.12) 0%, transparent 50%);
+      animation: meshMove 25s ease-in-out infinite;
+    }
+    @keyframes meshMove { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(20px, -20px) rotate(3deg); } }
+
+    /* Components */
+    .glass-card {
+      background: var(--card); backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border); border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    .input-field {
+      width: 100%; padding: 0.875rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 2px solid var(--card-border); border-radius: 12px;
+      color: var(--fg); transition: all 0.2s;
+    }
+    .input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
     
-    .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; transition: all 0.2s; background: white; }
-    .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.9rem;
+      border: none; border-radius: 12px; cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, #059669 100%); color: white; box-shadow: 0 4px 14px var(--accent-glow); }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+    .btn-secondary { background: var(--bg-elevated); color: var(--fg); border: 2px solid var(--card-border); }
+    .btn-secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .btn-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    /* Toast */
+    .toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 200; display: flex; flex-direction: column; gap: 0.75rem; }
+    .toast { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: var(--bg-elevated); border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: slideUp 0.4s ease; max-width: 320px; border-left: 4px solid var(--accent); }
+    .toast.error { border-left-color: var(--error); }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     
-    .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); color: white; padding: 14px 28px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s; width: 100%; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -4px rgba(13, 148, 136, 0.4); }
-    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-    
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .section-title { font-size: 1.25rem; font-weight: 700; color: var(--fg); margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; display: inline-block; }
-    
-    .alert-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 16px; border-radius: 10px; margin-top: 16px; display: none; }
-    .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 16px; border-radius: 10px; margin-top: 16px; display: none; }
-    
-    .header-sticky { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.95); border-bottom: 1px solid var(--border); }
+    .hidden { display: none !important; }
+    .light-mode .input-field { background: rgba(0,0,0,0.02); }
+    select.input-field { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; padding-right: 2.5rem; }
   </style>
 </head>
 <body>
+  <div class="mesh-gradient"></div>
+  <div id="toast-container" class="toast-container"></div>
 
   <!-- Header -->
-  <header class="header-sticky">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+  <header class="sticky top-0 z-50 backdrop-blur-xl border-b border-[var(--card-border)]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center text-white shadow">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
-        </div>
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white font-bold text-lg">M</div>
         <div>
-          <h1 class="text-lg font-bold text-gray-900">CPREC Nepal</h1>
+          <h1 class="font-display font-bold text-lg leading-tight">MCQ Master</h1>
+          <p class="text-xs text-[var(--fg-muted)]">CPREC Nepal</p>
         </div>
       </div>
-      <a href="https://cprec-nepal.github.io/register-school/" class="text-sm text-teal-600 hover:underline font-medium">School Registration</a>
+      <div class="flex items-center gap-3">
+         <!-- User Badge -->
+        <div id="user-badge" class="hidden items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent)] bg-opacity-10 border border-[var(--accent)] border-opacity-30 cursor-pointer" onclick="showPanel('panel-settings')">
+          <img id="header-avatar" src="https://ui-avatars.com/api/?name=U&background=random" class="w-6 h-6 rounded-full object-cover" />
+          <span class="text-sm font-medium text-[var(--accent)] max-w-[100px] truncate" id="user-email-display">User</span>
+        </div>
+        <button id="theme-toggle" class="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.05)] flex items-center justify-center text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors" aria-label="Toggle theme">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main class="py-10 px-4">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-10">
-        <h2 class="font-display text-3xl lg:text-4xl text-gray-900 mb-2">Focal Person Registration</h2>
-        <p class="text-gray-500">District-wise focal person database for School Health Program</p>
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    
+    <!-- STEP 1: AUTH -->
+    <section id="step-auth" class="fade-in">
+      <div class="max-w-md mx-auto">
+        <div class="glass-card p-8 sm:p-10 text-center">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-[var(--accent)] bg-opacity-10 flex items-center justify-center mb-6">
+            <svg class="w-8 h-8 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+          </div>
+          <h2 class="font-display font-bold text-3xl mb-2">Welcome</h2>
+          <p class="text-[var(--fg-muted)] mb-8">Login or Register to continue.</p>
+          
+          <div class="space-y-4">
+            <input type="email" id="auth-email" class="input-field" placeholder="Enter your email" />
+            
+            <!-- Referral Code Input (Only for new users) -->
+            <div id="referral-input-group" class="hidden">
+               <input type="text" id="auth-referral" class="input-field" placeholder="Referral Code (Optional)" />
+            </div>
+
+            <button id="btn-auth-action" class="btn btn-primary w-full py-4">
+              <span id="btn-auth-text">Continue with Email</span>
+            </button>
+            
+            <div class="pt-4">
+               <button id="btn-toggle-mode" class="text-sm text-[var(--fg-muted)] hover:text-[var(--accent)]">
+                 New user? Request Access
+               </button>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      <form id="focalPersonForm" class="space-y-8">
+    </section>
+
+    <!-- STEP 2: DASHBOARD -->
+    <section id="step-dashboard" class="hidden">
+      <div class="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
         
-        <!-- Personal Details -->
-        <div class="card p-6">
-          <h3 class="section-title">Personal Details</h3>
-          <div class="grid md:grid-cols-2 gap-6 mt-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
-              <input type="text" name="fullName" required class="form-input" placeholder="Full legal name">
+        <!-- Sidebar -->
+        <aside class="glass-card p-5 lg:sticky lg:top-24 space-y-5">
+          <div class="space-y-4">
+            <button onclick="showPanel('panel-overview')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-[rgba(255,255,255,0.05)] flex items-center gap-3 text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+              Dashboard
+            </button>
+            <button onclick="showPanel('panel-settings')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-[rgba(255,255,255,0.05)] flex items-center gap-3 text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              Settings
+            </button>
+            <button onclick="showPanel('panel-history')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-[rgba(255,255,255,0.05)] flex items-center gap-3 text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              History
+            </button>
+          </div>
+          
+          <div class="pt-4 border-t border-[var(--card-border)] space-y-3">
+             <h4 class="px-4 text-xs font-bold uppercase text-[var(--fg-muted)]">Quiz Setup</h4>
+             <select id="filter-faculty" class="input-field text-sm"><option value="">Faculty</option></select>
+             <select id="filter-level" class="input-field text-sm"><option value="">Level</option></select>
+             <button id="btn-start-quiz" class="btn btn-primary w-full" disabled>Start Quiz</button>
+          </div>
+          
+          <button id="btn-logout" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-red-500 hover:bg-opacity-10 flex items-center gap-3 text-red-400 transition-colors text-sm mt-4">
+             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+             Logout
+          </button>
+        </aside>
+
+        <!-- Main Panel -->
+        <div id="dashboard-content">
+          
+          <!-- Panel: Overview -->
+          <div id="panel-overview" class="glass-card p-6">
+             <h3 class="font-display font-semibold text-xl mb-6">Dashboard</h3>
+             <div class="grid sm:grid-cols-3 gap-4">
+               <div class="p-5 rounded-xl bg-[rgba(255,255,255,0.02)] border border-[var(--card-border)]">
+                 <div class="text-3xl font-bold text-[var(--accent)]">0</div>
+                 <div class="text-xs text-[var(--fg-muted)] mt-1">Quizzes</div>
+               </div>
+               <div class="p-5 rounded-xl bg-[rgba(255,255,255,0.02)] border border-[var(--card-border)]">
+                 <div class="text-3xl font-bold text-[var(--accent)]">0%</div>
+                 <div class="text-xs text-[var(--fg-muted)] mt-1">Avg Score</div>
+               </div>
+                <div class="p-5 rounded-xl bg-[rgba(255,255,255,0.02)] border border-[var(--card-border)]">
+                 <div class="text-3xl font-bold text-[var(--accent)]">0</div>
+                 <div class="text-xs text-[var(--fg-muted)] mt-1">Referrals</div>
+               </div>
+             </div>
+             <p class="text-[var(--fg-muted)] mt-6 text-sm">Select a faculty from the sidebar to start a new quiz session.</p>
+          </div>
+
+          <!-- Panel: Settings (COMPLETE) -->
+          <div id="panel-settings" class="glass-card p-6 hidden">
+            <h3 class="font-display font-semibold text-xl mb-6">Profile Settings</h3>
+            
+            <div class="flex flex-col sm:flex-row gap-8">
+               <!-- Avatar Section -->
+               <div class="flex flex-col items-center gap-4">
+                  <div class="relative">
+                     <img id="settings-avatar" src="https://ui-avatars.com/api/?name=U&size=128&background=random" class="w-32 h-32 rounded-full object-cover border-4 border-[var(--card-border)]" />
+                     <label for="avatar-upload" class="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-[var(--accent)] text-white flex items-center justify-center cursor-pointer hover:scale-110 transition-transform shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                     </label>
+                     <input type="file" id="avatar-upload" accept="image/*" class="hidden" />
+                  </div>
+                  <p class="text-xs text-[var(--fg-muted)]">Click icon to change photo</p>
+               </div>
+
+               <!-- Form Section -->
+               <div class="flex-1 space-y-5">
+                  <div class="grid sm:grid-cols-2 gap-4">
+                     <div>
+                        <label class="block text-xs font-bold uppercase text-[var(--fg-muted)] mb-2">Full Name</label>
+                        <input type="text" id="settings-name" class="input-field" placeholder="Your Name" />
+                     </div>
+                     <div>
+                        <label class="block text-xs font-bold uppercase text-[var(--fg-muted)] mb-2">Phone</label>
+                        <input type="text" id="settings-phone" class="input-field" placeholder="+977..." />
+                     </div>
+                  </div>
+                  
+                  <div>
+                     <label class="block text-xs font-bold uppercase text-[var(--fg-muted)] mb-2">Email</label>
+                     <input type="email" id="settings-email" class="input-field" disabled />
+                  </div>
+
+                  <div>
+                     <label class="block text-xs font-bold uppercase text-[var(--fg-muted)] mb-2">College/Organization</label>
+                     <input type="text" id="settings-college" class="input-field" placeholder="Your College" />
+                  </div>
+
+                  <div class="pt-4 border-t border-[var(--card-border)]">
+                     <h4 class="font-semibold text-sm mb-4">Update Password (Optional)</h4>
+                     <div class="grid sm:grid-cols-2 gap-4">
+                        <input type="password" id="pass-new" class="input-field" placeholder="Set New Password" />
+                     </div>
+                  </div>
+
+                  <div class="flex justify-end gap-3 pt-2">
+                     <button id="btn-save-profile" class="btn btn-primary">Save Changes</button>
+                  </div>
+               </div>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label>
-              <select name="gender" required class="form-input">
-                <option value="" disabled selected>Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth <span class="text-red-500">*</span></label>
-              <input type="date" name="dob" required class="form-input">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Citizenship No.</label>
-              <input type="text" name="citizenship" class="form-input" placeholder="Citizenship Number">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number <span class="text-red-500">*</span></label>
-              <input type="tel" name="contact" required class="form-input" placeholder="+977-XXXXXXXXXX">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-              <input type="email" name="email" class="form-input" placeholder="email@example.com">
+
+            <!-- Referral Section -->
+            <div class="mt-10 p-6 rounded-xl bg-[rgba(16,185,129,0.05)] border border-[var(--accent)] border-opacity-20">
+               <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                     <h4 class="font-semibold text-[var(--accent)]">Your Referral Code</h4>
+                     <p class="text-xs text-[var(--fg-muted)]">Share this code with friends. You'll earn points when they join!</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                     <div id="referral-code-display" class="px-4 py-2 bg-[var(--bg)] rounded-lg font-mono font-bold tracking-widest text-lg border border-[var(--card-border)]">CODE</div>
+                     <button onclick="copyReferral()" class="btn btn-secondary py-2 px-3">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                     </button>
+                  </div>
+               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Permanent Address -->
-        <div class="card p-6">
-          <h3 class="section-title">Permanent Address</h3>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Province <span class="text-red-500">*</span></label>
-              <select name="permProvince" id="permProvince" required class="form-input">
-                <option value="">Loading...</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">District <span class="text-red-500">*</span></label>
-              <select name="permDistrict" id="permDistrict" required class="form-input" disabled>
-                <option value="">Select Province first</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Municipality <span class="text-red-500">*</span></label>
-              <select name="permMunicipality" id="permMunicipality" required class="form-input" disabled>
-                <option value="">Select District first</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Ward No. <span class="text-red-500">*</span></label>
-              <input type="number" name="permWard" required class="form-input" placeholder="e.g., 5">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Tole / Street Address</label>
-              <input type="text" name="permTole" class="form-input" placeholder="Street name or Tole">
-            </div>
+          <!-- Panel: History -->
+          <div id="panel-history" class="glass-card p-6 hidden">
+            <h3 class="font-display font-semibold text-xl mb-6">History</h3>
+            <div id="history-list" class="space-y-3 text-sm">No history found.</div>
           </div>
-        </div>
 
-        <!-- Temporary Address -->
-        <div class="card p-6">
-          <div class="flex justify-between items-center mb-2">
-            <h3 class="section-title" style="margin-bottom: 0; border-bottom: none;">Temporary Address</h3>
-            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-              <input type="checkbox" id="sameAsPerm" class="rounded text-teal-600 focus:ring-teal-500">
-              Same as Permanent
-            </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: QUIZ -->
+    <section id="step-quiz" class="hidden">
+       <div class="max-w-3xl mx-auto glass-card p-6">
+          <div class="mb-4"><div class="progress-track"><div id="q-progress" class="progress-fill" style="width:0%"></div></div></div>
+          <div id="quiz-area" class="min-h-[300px]"></div>
+          <div class="flex justify-between mt-6">
+             <button id="btn-q-prev" class="btn btn-secondary" disabled>Prev</button>
+             <button id="btn-q-finish" class="btn btn-danger">Finish</button>
+             <button id="btn-q-next" class="btn btn-primary" disabled>Next</button>
           </div>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
-              <select name="tempProvince" id="tempProvince" class="form-input">
-                <option value="">Select Province</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
-              <select name="tempDistrict" id="tempDistrict" class="form-input" disabled>
-                <option value="">Select Province first</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Municipality</label>
-              <select name="tempMunicipality" id="tempMunicipality" class="form-input" disabled>
-                <option value="">Select District first</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Ward No.</label>
-              <input type="number" name="tempWard" class="form-input" placeholder="e.g., 5">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Tole / Street Address</label>
-              <input type="text" name="tempTole" class="form-input" placeholder="Street name or Tole">
-            </div>
-          </div>
-        </div>
+       </div>
+    </section>
 
-        <!-- Professional Details -->
-        <div class="card p-6">
-          <h3 class="section-title">Professional & Education Details</h3>
-          <div class="grid md:grid-cols-2 gap-6 mt-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Education Level <span class="text-red-500">*</span></label>
-              <select name="educationLevel" id="educationLevel" required class="form-input">
-                <option value="" disabled selected>Select Level</option>
-                <option value="SLC/SEE">SLC / SEE</option>
-                <option value="Intermediate/+2">Intermediate / +2</option>
-                <option value="Bachelor">Bachelor</option>
-                <option value="Master">Master</option>
-                <option value="PhD">PhD</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div id="educationOtherBox" style="display: none;">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Specify Education</label>
-              <input type="text" name="educationDetailOther" class="form-input" placeholder="e.g., CTEVT Certificate">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Education Details (Faculty)</label>
-              <input type="text" name="educationDetail" class="form-input" placeholder="e.g., Bachelor in Public Health">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Current Profession <span class="text-red-500">*</span></label>
-              <select name="profession" id="profession" required class="form-input">
-                <option value="" disabled selected>Select Profession</option>
-                <option value="Health Worker">Health Worker</option>
-                <option value="Teacher">Teacher</option>
-                <option value="Government Staff">Government Staff</option>
-                <option value="Social Worker">Social Worker</option>
-                <option value="Student">Student</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div id="professionOtherBox" style="display: none;">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Specify Profession</label>
-              <input type="text" name="professionOther" class="form-input" placeholder="Enter your profession">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Organization / Institution</label>
-              <input type="text" name="organization" class="form-input" placeholder="Current workplace">
-            </div>
-          </div>
-        </div>
+    <!-- STEP 4: RESULTS -->
+    <section id="step-results" class="hidden">
+       <div class="max-w-xl mx-auto glass-card p-8 text-center">
+          <h2 class="font-display text-3xl font-bold mb-2">Quiz Complete</h2>
+          <p class="text-[var(--fg-muted)] mb-6">Score: <span id="res-score">0/0</span></p>
+          <button onclick="initDashboard()" class="btn btn-primary">Back to Dashboard</button>
+       </div>
+    </section>
 
-        <!-- Hidden Form Type -->
-        <input type="hidden" name="formType" value="focalPerson">
-
-        <!-- Submit Button -->
-        <div class="pt-4">
-          <button type="submit" id="submitBtn" class="btn-primary">Submit Registration</button>
-        </div>
-
-        <div id="successMessage" class="alert-success">
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Registration successful! Data saved successfully.</span>
-          </div>
-        </div>
-        <div id="errorMessage" class="alert-error">
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Error submitting form. Please try again.</span>
-          </div>
-        </div>
-
-      </form>
-    </div>
   </main>
 
+  <!-- OTP Modal -->
+  <div id="modal-back" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden items-center justify-center">
+     <div class="glass-card p-8 w-full max-w-sm text-center">
+        <h3 class="font-display font-bold text-xl mb-4">Enter Verification Code</h3>
+        <input type="text" id="input-otp" class="input-field text-center text-2xl tracking-[0.5em] mb-4" maxlength="6" placeholder="------" />
+        <button id="btn-verify-otp" class="btn btn-primary w-full">Verify</button>
+     </div>
+  </div>
+
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNNOC7VavC-N5GAuYpZ12BP2laFCpIIQoOa9Z2idM6LEXG7waFzB8JbX1zJnAyMZn7/exec';
+    const API = "https://script.google.com/macros/s/AKfycbw_DyZfWEpg5Z6Ex0J3aCLrM6PBWlsZp7sdOPPSemuCFG-KjslgvdENF9uscqlM5uF7/exec";
     
-    let locationData = {};
-    const form = document.getElementById('focalPersonForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const successMsg = document.getElementById('successMessage');
-    const errorMsg = document.getElementById('errorMessage');
+    const $ = id => document.getElementById(id);
+    const state = {
+       mode: 'login',
+       email: '',
+       token: '',
+       profile: {},
+       mcqs: [],
+       quiz: { index: 0, data: [], answers: {}, score: 0 }
+    };
 
-    // --- 1. LOAD LOCATIONS ON PAGE LOAD ---
-    window.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const response = await fetch(SCRIPT_URL + '?action=getLocations');
-        const result = await response.json();
-        
-        if (result.result === 'success') {
-          locationData = result.data;
-          populateProvinces();
-        } else {
-          console.error('Failed to load locations:', result.message);
-          // Fallback if API fails
-          document.getElementById('permProvince').innerHTML = '<option value="">Error loading</option>';
-        }
-      } catch (error) {
-        console.error('Network error:', error);
-      }
-    });
+    // --- Utils ---
+    const toast = (msg, type='info') => {
+       const c = $('toast-container');
+       const el = document.createElement('div');
+       el.className = `toast ${type === 'error' ? 'error' : ''}`;
+       el.innerHTML = `<span class="text-sm font-medium">${msg}</span>`;
+       c.appendChild(el);
+       setTimeout(() => el.remove(), 4000);
+    };
 
-    // --- 2. POPULATE DROPDOWNS LOGIC ---
-    function populateProvinces() {
-      const permProv = document.getElementById('permProvince');
-      const tempProv = document.getElementById('tempProvince');
-      
-      const options = '<option value="">Select Province</option>' + 
-        Object.keys(locationData).map(p => `<option value="${p}">${p}</option>`).join('');
-      
-      permProv.innerHTML = options;
-      tempProv.innerHTML = options;
-    }
+    const api = async (params) => {
+       try {
+          const url = new URL(API);
+          Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
+          const res = await fetch(url);
+          return await res.json();
+       } catch(e) {
+          console.error(e);
+          return { success: false, message: "Network Error" };
+       }
+    };
 
-    function populateDistricts(provinceId, districtId, munId) {
-      const province = document.getElementById(provinceId).value;
-      const districtSelect = document.getElementById(districtId);
-      const munSelect = document.getElementById(munId);
-      
-      // Reset dependents
-      districtSelect.innerHTML = '<option value="">Select District</option>';
-      munSelect.innerHTML = '<option value="">Select Municipality</option>';
-      districtSelect.disabled = true;
-      munSelect.disabled = true;
-
-      if (province && locationData[province]) {
-        const districts = Object.keys(locationData[province]);
-        districtSelect.innerHTML = '<option value="">Select District</option>' + 
-          districts.map(d => `<option value="${d}">${d}</option>`).join('');
-        districtSelect.disabled = false;
-      }
-    }
-
-    function populateMunicipalities(provinceId, districtId, munId) {
-      const province = document.getElementById(provinceId).value;
-      const district = document.getElementById(districtId).value;
-      const munSelect = document.getElementById(munId);
-      
-      munSelect.innerHTML = '<option value="">Select Municipality</option>';
-      munSelect.disabled = true;
-
-      if (province && district && locationData[province][district]) {
-        const municipalities = locationData[province][district];
-        munSelect.innerHTML = '<option value="">Select Municipality</option>' + 
-          municipalities.map(m => `<option value="${m}">${m}</option>`).join('');
-        munSelect.disabled = false;
-      }
-    }
-
-    // Event Listeners for Cascading Dropdowns
-    document.getElementById('permProvince').addEventListener('change', () => populateDistricts('permProvince', 'permDistrict', 'permMunicipality'));
-    document.getElementById('permDistrict').addEventListener('change', () => populateMunicipalities('permProvince', 'permDistrict', 'permMunicipality'));
+    // --- Theme ---
+    $('theme-toggle').onclick = () => document.body.classList.toggle('light-mode');
     
-    document.getElementById('tempProvince').addEventListener('change', () => populateDistricts('tempProvince', 'tempDistrict', 'tempMunicipality'));
-    document.getElementById('tempDistrict').addEventListener('change', () => populateMunicipalities('tempProvince', 'tempDistrict', 'tempMunicipality'));
+    // --- Nav ---
+    const showStep = (id) => {
+       ['step-auth', 'step-dashboard', 'step-quiz', 'step-results'].forEach(s => $(s).classList.toggle('hidden', s !== id));
+    };
+    const showPanel = (id) => {
+       ['panel-overview', 'panel-settings', 'panel-history'].forEach(p => $(p).classList.toggle('hidden', p !== id));
+    };
 
-    // --- 3. SAME AS PERMANENT CHECKBOX ---
-    document.getElementById('sameAsPerm').addEventListener('change', function() {
-      if (this.checked) {
-        // Copy values
-        const pProv = document.getElementById('permProvince').value;
-        document.getElementById('tempProvince').value = pProv;
-        populateDistricts('tempProvince', 'tempDistrict', 'tempMunicipality');
-        
-        // Timeout needed to wait for districts to populate
-        setTimeout(() => {
-          document.getElementById('tempDistrict').value = document.getElementById('permDistrict').value;
-          populateMunicipalities('tempProvince', 'tempDistrict', 'tempMunicipality');
+    // --- Auth ---
+    $('btn-toggle-mode').onclick = () => {
+       state.mode = state.mode === 'login' ? 'register' : 'login';
+       $('btn-auth-text').innerText = state.mode === 'login' ? 'Continue with Email' : 'Request Access';
+       $('referral-input-group').classList.toggle('hidden', state.mode === 'login');
+       $('btn-toggle-mode').innerText = state.mode === 'login' ? 'New user? Request Access' : 'Have an account? Login';
+    };
+
+    $('btn-auth-action').onclick = async () => {
+       const email = $('auth-email').value.trim();
+       const ref = $('auth-referral').value.trim();
+       if(!email) return toast("Email required", "error");
+
+       if(state.mode === 'register') {
+          const res = await api({ type: 'registerUser', email, referralCode: ref, ip: 'web' });
+          toast(res.message, res.success ? 'success' : 'error');
+       } else {
+          const res = await api({ type: 'sendCode', email, ip: 'web' });
+          if(res.success) {
+             state.email = email;
+             $('modal-back').classList.remove('hidden');
+             $('modal-back').classList.add('flex');
+          } else {
+             toast(res.message, 'error');
+          }
+       }
+    };
+
+    $('btn-verify-otp').onclick = async () => {
+       const code = $('input-otp').value.trim();
+       const res = await api({ type: 'verifyCode', email: state.email, code });
+       if(res.success) {
+          state.token = res.token;
+          state.email = res.email;
+          localStorage.setItem('mcq_token', res.token);
+          localStorage.setItem('mcq_email', res.email);
+          $('modal-back').classList.add('hidden');
+          initDashboard();
+          toast("Welcome back!", "success");
+       } else {
+          toast(res.message, "error");
+       }
+    };
+
+    // --- Dashboard ---
+    const initDashboard = async () => {
+       showStep('step-dashboard');
+       $('user-badge').classList.remove('hidden');
+       $('user-badge').classList.add('flex');
+       
+       // Load Profile
+       const pRes = await api({ type: 'getProfile', email: state.email, token: state.token });
+       if(pRes.success) {
+          state.profile = pRes.profile;
+          updateUI();
+       }
+       
+       // Load MCQs
+       const mRes = await api({ type: 'getMCQs' });
+       if(mRes.success) state.mcqs = mRes.mcqs;
+       
+       // Filters
+       const fRes = await api({ type: 'getFilters' });
+       if(fRes.success) {
+          $('filter-faculty').innerHTML = '<option value="">All</option>' + fRes.subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+          $('filter-level').innerHTML = '<option value="">All</option>' + fRes.colleges.map(c => `<option value="${c}">${c}</option>`).join('');
+       }
+       $('btn-start-quiz').disabled = false;
+    };
+
+    const updateUI = () => {
+       const p = state.profile;
+       $('user-email-display').innerText = p.fullName || p.email.split('@')[0];
+       
+       // Header Avatar
+       const avatarUrl = p.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.fullName || 'U')}&background=random`;
+       $('header-avatar').src = avatarUrl;
+       
+       // Settings Panel
+       $('settings-avatar').src = avatarUrl;
+       $('settings-name').value = p.fullName || '';
+       $('settings-phone').value = p.phone || '';
+       $('settings-email').value = p.email;
+       $('settings-college').value = p.college || '';
+       $('referral-code-display').innerText = p.referralCode || 'N/A';
+    };
+
+    // --- Profile Logic ---
+    
+    // Avatar Upload
+    $('avatar-upload').onchange = async (e) => {
+       const file = e.target.files[0];
+       if(!file) return;
+       
+       // Resize logic (simple compression)
+       const reader = new FileReader();
+       reader.onload = async (ev) => {
+          toast("Uploading...", "info");
+          const base64 = ev.target.result.split(',')[1];
+          const mime = file.type;
           
-          setTimeout(() => {
-            document.getElementById('tempMunicipality').value = document.getElementById('permMunicipality').value;
-          }, 100);
-        }, 100);
+          const res = await api({ 
+             type: 'uploadAvatar', 
+             email: state.email, 
+             token: state.token, 
+             base64Data: base64, 
+             mimeType: mime 
+          });
+          
+          if(res.success) {
+             state.profile.avatar = res.url;
+             updateUI();
+             toast("Photo updated!", "success");
+          } else {
+             toast(res.message, "error");
+          }
+       };
+       reader.readAsDataURL(file);
+    };
 
-        document.querySelector('[name="tempWard"]').value = document.querySelector('[name="permWard"]').value;
-        document.querySelector('[name="tempTole"]').value = document.querySelector('[name="permTole"]').value;
-        
-        // Disable
-        document.getElementById('tempProvince').disabled = true;
-        document.getElementById('tempDistrict').disabled = true;
-        document.getElementById('tempMunicipality').disabled = true;
-        document.querySelector('[name="tempWard"]').disabled = true;
-        document.querySelector('[name="tempTole"]').disabled = true;
+    // Save Profile
+    $('btn-save-profile').onclick = async () => {
+       const name = $('settings-name').value;
+       const phone = $('settings-phone').value;
+       const college = $('settings-college').value;
+       const newPass = $('pass-new').value;
+       
+       const res = await api({ 
+          type: 'updateProfile', 
+          email: state.email, 
+          token: state.token, 
+          fullName: name, 
+          phone: phone,
+          college: college,
+          newPassword: newPass
+       });
+       
+       if(res.success) {
+          state.profile.fullName = name;
+          state.profile.phone = phone;
+          state.profile.college = college;
+          updateUI();
+          $('pass-new').value = '';
+          toast("Profile saved!", "success");
+       } else {
+          toast(res.message, "error");
+       }
+    };
 
-      } else {
-        // Enable
-        document.getElementById('tempProvince').disabled = false;
-        document.getElementById('tempDistrict').disabled = false;
-        document.getElementById('tempMunicipality').disabled = false;
-        document.querySelector('[name="tempWard"]').disabled = false;
-        document.querySelector('[name="tempTole"]').disabled = false;
-      }
-    });
+    const copyReferral = () => {
+       const code = $('referral-code-display').innerText;
+       navigator.clipboard.writeText(code);
+       toast("Code copied!", "success");
+    };
 
-    // --- 4. SHOW/HIDE "OTHER" INPUTS ---
-    document.getElementById('educationLevel').addEventListener('change', function() {
-      document.getElementById('educationOtherBox').style.display = this.value === 'Other' ? 'block' : 'none';
-    });
-    document.getElementById('profession').addEventListener('change', function() {
-      document.getElementById('professionOtherBox').style.display = this.value === 'Other' ? 'block' : 'none';
-    });
+    // --- Quiz Logic ---
+    $('btn-start-quiz').onclick = () => {
+       let list = state.mcqs;
+       const f = $('filter-faculty').value;
+       if(f) list = list.filter(q => q.subject === f);
+       list = list.sort(() => Math.random() - 0.5).slice(0, 10);
+       
+       if(!list.length) return toast("No questions found", "error");
+       
+       state.quiz = { index: 0, data: list, answers: {}, score: 0 };
+       showStep('step-quiz');
+       renderQ();
+    };
 
-    // --- 5. FORM SUBMISSION ---
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      successMsg.style.display = 'none';
-      errorMsg.style.display = 'none';
+    const renderQ = () => {
+       const q = state.quiz.data[state.quiz.index];
+       const ans = state.quiz.answers[state.quiz.index];
+       const isAns = ans !== undefined;
+       
+       let html = `<h3 class="text-xl font-semibold mb-6">${q.q}</h3><div class="space-y-3">`;
+       ['A','B','C','D'].forEach(l => {
+          const opt = q.options[['A','B','C','D'].indexOf(l)];
+          const sel = ans === l;
+          const cor = q.answer === l;
+          let cls = "option-card";
+          if(isAns) { cls += " disabled"; if(cor) cls += " correct"; if(sel && !cor) cls += " wrong"; }
+          html += `<div class="${cls}" data-val="${l}"><div class="option-marker">${l}</div><div>${opt}</div></div>`;
+       });
+       html += `</div>`;
+       
+       $('quiz-area').innerHTML = html;
+       if(!isAns) {
+          document.querySelectorAll('#quiz-area .option-card').forEach(el => {
+             el.onclick = () => {
+                const val = el.dataset.val;
+                state.quiz.answers[state.quiz.index] = val;
+                if(val === q.answer) state.quiz.score++;
+                renderQ();
+             };
+          });
+       }
+       
+       const tot = state.quiz.data.length;
+       $('q-progress').style.width = `${((state.quiz.index+1)/tot)*100}%`;
+       $('btn-q-next').disabled = !isAns;
+       $('btn-q-prev').disabled = state.quiz.index === 0;
+    };
 
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Submitting...</span>';
+    $('btn-q-next').onclick = () => { state.quiz.index++; renderQ(); };
+    $('btn-q-prev').onclick = () => { state.quiz.index--; renderQ(); };
+    
+    $('btn-q-finish').onclick = async () => {
+       const score = state.quiz.score;
+       const total = state.quiz.data.length;
+       const percent = Math.round((score/total)*100);
+       await api({ type: 'saveScore', email: state.email, subject: $('filter-faculty').value || 'General', college: 'Web', score, total, percentage: percent });
+       $('res-score').innerText = `${score}/${total} (${percent}%)`;
+       showStep('step-results');
+    };
 
-      try {
-        const formData = new FormData(form);
-        
-        // Handle "Other" logic for Education
-        if (formData.get('educationLevel') === 'Other') {
-            formData.set('educationLevel', formData.get('educationDetailOther'));
-        }
-        // Handle "Other" logic for Profession
-        if (formData.get('profession') === 'Other') {
-            formData.set('profession', formData.get('professionOther'));
-        }
+    $('btn-logout').onclick = () => {
+       localStorage.clear();
+       location.reload();
+    };
 
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: formData
-        });
-
-        successMsg.style.display = 'block';
-        form.reset();
-        // Reset dropdowns state
-        document.getElementById('permDistrict').disabled = true;
-        document.getElementById('permMunicipality').disabled = true;
-        document.getElementById('tempDistrict').disabled = true;
-        document.getElementById('tempMunicipality').disabled = true;
-
-      } catch (error) {
-        console.error('Error:', error);
-        errorMsg.style.display = 'block';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit Registration';
-      }
-    });
+    // --- Init ---
+    const token = localStorage.getItem('mcq_token');
+    const email = localStorage.getItem('mcq_email');
+    if(token && email) {
+       state.token = token;
+       state.email = email;
+       initDashboard();
+    } else {
+       showStep('step-auth');
+    }
   </script>
 </body>
 </html>
